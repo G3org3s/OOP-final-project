@@ -21,6 +21,16 @@ public abstract class Security implements Comparable<Security> {
         this.buyDate = LocalDate.now();
     }
 
+    public Security(String ticker, int shareCount, double originalPrice,
+                    double currentPrice, double assumedAnnualReturn, LocalDate buyDate) {
+        this.ticker = ticker;
+        this.shareCount = shareCount;
+        this.originalPrice = originalPrice;
+        this.currentPrice = currentPrice;
+        this.assumedAnnualReturn = assumedAnnualReturn;
+        this.buyDate = buyDate;
+    }
+
     /**
      * calculates future profits for an inputted amount of years
      * the assumedAnnualReturn must be divided by 100 since its in percentage form and need to be converted

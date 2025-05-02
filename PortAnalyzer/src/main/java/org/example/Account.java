@@ -34,17 +34,15 @@ public abstract class Account implements Reportable {
     /**
      * Calculates the total absolute profit across all securities after a given number of years,
      * based on their individual growth assumptions.
-     * @param years
      * @return
      */
-    public double getTotalProfit(double years) {
+    public double getTotalProfit() {
         //todo
     }
 
     /**
      * Calculates the annualized return over a period of years.
      *
-     * @param years number of years used in return calculation.
      * @return the compounded annual return as a percentage.
      */
     public double getAnnualizedReturn(double years) {

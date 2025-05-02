@@ -18,6 +18,11 @@ public abstract class DividendSecurity extends Security implements DividendPayin
         this.dividendYield = dividendYield;
     }
 
+    public DividendSecurity(String ticker, int shareCount, double originalPrice, double currentPrice,
+                            double assumedAnnualReturn, LocalDate buyDate) {
+        super(ticker, shareCount, originalPrice, currentPrice, assumedAnnualReturn, buyDate);
+    }
+
     /**
      * projects the amount of money earned from dividends based on:
      * 1. a stocks assumed return
