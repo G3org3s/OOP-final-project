@@ -1,5 +1,6 @@
 package org.example;
 
+import java.time.LocalDate;
 import java.util.Objects;
 
 public abstract class Security implements Comparable<Security> {
@@ -8,6 +9,7 @@ public abstract class Security implements Comparable<Security> {
     protected double originalPrice;
     protected double currentPrice;
     protected double assumedAnnualReturn; //can be assumed with things like average profit (%) in last 5 years
+    protected LocalDate buyDate;
 
     public Security(String ticker, int shareCount, double originalPrice,
                     double currentPrice, double assumedAnnualReturn) {
@@ -16,6 +18,7 @@ public abstract class Security implements Comparable<Security> {
         this.originalPrice = originalPrice;
         this.currentPrice = currentPrice;
         this.assumedAnnualReturn = assumedAnnualReturn;
+        this.buyDate = LocalDate.now();
     }
 
     /**
