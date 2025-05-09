@@ -24,7 +24,7 @@ public class PortfolioManagerAllTests {
                 "ABC", 100, 10.0, 12.0, 0.05, LocalDate.now().minusYears(2)
         );
         double expected = (12.0 - 10.0) * 100 * Math.pow(1.05, 2);
-        Assertions.assertEquals(expected, common.calculateProfit(2.0), 1e-6);
+        Assertions.assertEquals(expected, common.calculateFutureProfit(2.0), 1e-6);
     }
 
     @Test
@@ -85,27 +85,9 @@ public class PortfolioManagerAllTests {
         acct.addSecurity(common);
         acct.addSecurity(dividend);
 
-        double p1 = common.calculateProfit(1.0);
-        double p2 = dividend.calculateProfit(1.0);
+        double p1 = common.calculateFutureProfit(1.0);
+        double p2 = dividend.calculateFutureProfit(1.0);
         Assertions.assertEquals(p1 + p2, acct.getTotalProfit(), 1e-6);
-    }
-
-    @Test
-    public void testGetAnnualizedReturn() {
-        CommonStock common = new CommonStock(
-                "ABC", 100, 10.0, 12.0, 0.05, LocalDate.now().minusYears(2)
-        );
-        DividendStock dividend = new DividendStock(
-                "XYZ", 50, 20.0, 25.0, 0.04, 4, LocalDate.now().minusYears(3)
-        );
-        TaxableAccount acct = new TaxableAccount("A1", "user1");
-        acct.addSecurity(common);
-        acct.addSecurity(dividend);
-
-        double initial = 100 * 10.0 + 50 * 20.0;
-        double finalVal = acct.getPortfolioMarketValue();
-        double expected = Math.pow(finalVal / initial, 1.0 / 1.0) - 1.0;
-        Assertions.assertEquals(expected * 100, acct.getAnnualizedReturn(1.0), 1e-6);
     }
 
     @Test

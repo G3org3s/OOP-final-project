@@ -9,18 +9,18 @@ import java.util.TreeMap;
 
 public abstract class DividendSecurity extends Security implements DividendPaying {
     protected double dividendYield; //input is in percentage
-    protected TreeMap<LocalDate, Double> dividendPayouts;
+
 
     public DividendSecurity(String ticker, int shareCount, double originalPrice,
                             double currentPrice, double assumedAnnualReturn, double dividendYield) {
         super(ticker, shareCount, originalPrice, currentPrice, assumedAnnualReturn);
-        this.dividendPayouts = new TreeMap<>();
         this.dividendYield = dividendYield;
     }
 
-    public DividendSecurity(String ticker, int shareCount, double originalPrice, double currentPrice,
-                            double assumedAnnualReturn, LocalDate buyDate) {
+    public DividendSecurity(String ticker, int shareCount, double originalPrice,
+                            double currentPrice, double assumedAnnualReturn, LocalDate buyDate, double dividendYield) {
         super(ticker, shareCount, originalPrice, currentPrice, assumedAnnualReturn, buyDate);
+        this.dividendYield = dividendYield;
     }
 
     /**

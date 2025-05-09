@@ -2,6 +2,7 @@ package org.example;
 
 import java.time.LocalDate;
 import java.util.Objects;
+import java.time.temporal.ChronoUnit;
 
 public abstract class Security implements Comparable<Security> {
     protected String ticker;
@@ -37,8 +38,26 @@ public abstract class Security implements Comparable<Security> {
      * @param years number of years you want to project for
      * @return profit generated in that number of years
      */
-    public double calculateProfit(double years) {
+    public double calculateFutureProfit(double years) {
         return (currentPrice - originalPrice) * shareCount * Math.pow(1 + assumedAnnualReturn / 100, years);
+    }
+
+    /**
+     * calculates percentage profit between buy date price and current price
+     * @return profit generated in that number of years
+     */
+    public double calculatePercentageProfit() {
+        return ((currentPrice - originalPrice) / originalPrice) * 100;
+    }
+
+    /**
+     * Calculates the annualized return since buying the asset.
+     * @return The average annual return of an asset.
+     */
+    public double getAvgAnnualizedReturn() {
+        double daysBetween = ChronoUnit.DAYS.between(buyDate, LocalDate.now());
+        double years = daysBetween / 365;
+        return calculatePercentageProfit() / years;
     }
 
     /**
