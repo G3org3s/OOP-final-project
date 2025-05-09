@@ -7,7 +7,10 @@ public class TaxableAccount extends Account implements TaxableIncomeCalculable {
 
     @Override
     public double calculateTaxableIncome() {
-        //todo
-        return 0;
+        if (this.getTotalProfit() > 0) {
+            return this.getTotalProfit() / 2;
+        } else {
+            return 0.0;
+        }
     }
 }

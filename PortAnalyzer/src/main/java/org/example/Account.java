@@ -20,7 +20,15 @@ public abstract class Account implements Reportable {
      * @param security
      */
     public void addSecurity(Security security) {
-        //todo
+        if (holdings.containsKey(security.getTicker())) {
+            double existingShareCount = holdings.get(security.getTicker()).getShareCount();
+            double existingOriginalPrice = holdings.get(security.getTicker()).getOriginalPrice();
+
+            security.setOriginalPrice((existingOriginalPrice * existingShareCount + security.getOriginalPrice() * security.getShareCount()) /
+                    (existingOriginalPrice + security.getShareCount()));
+            security.setShareCount((int) (existingShareCount + security.getShareCount()));
+        }
+        holdings.put(security.getTicker(), security);
     }
 
     /**
@@ -28,7 +36,11 @@ public abstract class Account implements Reportable {
      * @return the current market value of the portfolio.
      */
     public double getPortfolioMarketValue() {
-        //todo
+        double totalValue = 0;
+        for (Security security : holdings.values()) {
+            totalValue += security.getMarketValue() * security.getShareCount();
+        }
+        return totalValue;
     }
 
     /**
@@ -37,11 +49,15 @@ public abstract class Account implements Reportable {
      * @return
      */
     public double getTotalProfit() {
-        //todo
+        double originalValue = 0;
+        for (Security security : holdings.values()) {
+            originalValue += security.getOriginalPrice() * security.getShareCount();
+        }
+        return getPortfolioMarketValue() - originalValue;
     }
 
     /**
-     * Calculates the annualized return over a period of years.
+     * Calculates the annualized return since buying the asset.
      *
      * @return the compounded annual return as a percentage.
      */
@@ -85,10 +101,8 @@ public abstract class Account implements Reportable {
 
     // Inner Comparator class for Account
     public static class AccountComparator implements Comparator<Account> {
-        private final double years;
 
-        public AccountComparator(double years) {
-            this.years = years;
+        public AccountComparator() {
         }
 
         /**
@@ -99,7 +113,7 @@ public abstract class Account implements Reportable {
          */
         @Override
         public int compare(Account a1, Account a2) {
-            return Double.compare(a2.getTotalProfit(years), a1.getTotalProfit(years)); // descending order
+            return Double.compare(a2.getTotalProfit(), a1.getTotalProfit()); // descending order
         }
     }
 }

@@ -132,7 +132,7 @@ public class PortfolioManagerAllTests {
         TaxableAccount acct1 = new TaxableAccount("A1", "user1");
         acct1.addSecurity(dividend);
         TaxableAccount acct2 = new TaxableAccount("A2", "user2");
-        Account.AccountComparator comp = new Account.AccountComparator(1.0);
+        Account.AccountComparator comp = new Account.AccountComparator();
 
         Assertions.assertTrue(comp.compare(acct1, acct2) == 0);
     }
