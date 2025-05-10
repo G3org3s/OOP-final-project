@@ -52,6 +52,8 @@ public abstract class Security implements Comparable<Security> {
 
     /**
      * Calculates the annualized return since buying the asset in percentage.
+     * If an asset was bought less than a year ago, it will result in bigger numbers,
+     * this is desired and not a mistake.
      * @return The average annual return of an asset.
      */
     public double getAvgAnnualizedReturn() {
