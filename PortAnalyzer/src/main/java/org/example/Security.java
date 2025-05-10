@@ -39,7 +39,7 @@ public abstract class Security implements Comparable<Security> {
      * @return profit generated in that number of years
      */
     public double calculateFutureProfit(double years) {
-        return (currentPrice - originalPrice) * shareCount * Math.pow(1 + assumedAnnualReturn / 100, years);
+        return ((currentPrice - originalPrice) * shareCount) * Math.pow(1 + assumedAnnualReturn / 100, years);
     }
 
     /**
@@ -51,7 +51,7 @@ public abstract class Security implements Comparable<Security> {
     }
 
     /**
-     * Calculates the annualized return since buying the asset.
+     * Calculates the annualized return since buying the asset in percentage.
      * @return The average annual return of an asset.
      */
     public double getAvgAnnualizedReturn() {

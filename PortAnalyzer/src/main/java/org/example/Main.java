@@ -2,18 +2,26 @@ package org.example;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 import java.util.zip.DataFormatException;
 
 public class Main {
-    public static void main(String[] args) {
-        System.out.println(LocalDate.now());
+    public static void main(String[] args) throws DataFormatException, IOException {
+        Account TaxableAccount = new TaxableAccount("0");
+        readData("src/main/resources/TaxableAccount", TaxableAccount);
+
+        Account NonTaxableAccount = new NonTaxableAccount("1");
+        readData("src/main/resources/NonTaxableAccount", NonTaxableAccount);
+
+        List<Account> accounts = new ArrayList<>();
+        accounts.add(TaxableAccount);
+        accounts.add(NonTaxableAccount);
+        System.out.println(TaxableAccount.getHoldings());
+        writeReport("src/main/resources/Report", Collections.unmodifiableList(accounts));
     }
 
     /**
@@ -81,14 +89,60 @@ public class Main {
                         }
 
                     } catch (NumberFormatException | java.time.format.DateTimeParseException e) {
-                        System.err.println("Skipping row due to parsing error: " + e.getMessage());
+                        System.out.println("Skipping row due to parsing error: " + e.getMessage());
                     }
                 } else {
-                    System.err.println("Skipping row due to insufficient columns: " + line);
+                    System.out.println("Skipping row due to insufficient columns: " + line);
                 }
             }
         } catch (FileNotFoundException e) {
-            System.err.println("Error: CSV file not found at " + filePath);
+            System.out.println("Error: CSV file not found at " + filePath);
+        }
+    }
+
+    /**
+     * Writes the report for the accounts in the list of accounts created by the user
+     * @param filePath file to write into
+     * @param accounts List of accounts
+     */
+    public static void writeReport(String filePath, List<Account> accounts) {
+        try (FileWriter writer = new FileWriter(filePath)) {
+            for (Account account : accounts) {
+                double dividendsEarned = 0.0;
+                writer.write("Account Report for ID: " + account.getAccountId() + "\n");
+
+                writer.write("Holdings:\n");
+                for (Security s : account.getHoldings().values()) {
+                    writer.write("-> " + s.getTicker() + ": " + s.getShareCount() + " shares @ $" +
+                            s.getCurrentPrice() + " | " + "Profit (%) -> "  + s.calculatePercentageProfit() +
+                            " | " + "Avg Annual Return -> " + s.getAvgAnnualizedReturn() + " | " +
+                            "Projected returns over 5 years ($) -> " + s.calculateFutureProfit(5.0));
+                    if (s instanceof DividendSecurity divSecurity) {
+                        writer.write(" | " + "Dividends earned ($ estimate) -> " + ((DividendSecurity) s).totalDividends() +
+                                " | " + "Projected dividends over 5 years ($) -> " + ((DividendSecurity) s).projectDividend(5)
+                        + "\n");
+                        dividendsEarned += ((DividendSecurity) s).totalDividends();
+                    } else {
+                        writer.write("\n");
+                    }
+                }
+
+                double marketValue = account.getPortfolioMarketValue();
+                double profit = account.getTotalProfit();;
+
+                writer.write("\nTotal Market Value: $" + String.format("%.2f", marketValue) + "\n");
+                writer.write("Total Profit (without dividends): $" + String.format("%.2f", profit) + "\n");
+                writer.write("Estimated earned dividends ($): $" + String.format("%.2f", dividendsEarned) + "\n");
+
+                if (account instanceof TaxableIncomeCalculable taxable) {
+                    double taxableIncome = taxable.calculateTaxableIncome();
+                    writer.write("Taxable Income Estimate: $" + String.format("%.2f", taxableIncome) + "\n \n \n");
+                } else {
+                    writer.write("\n \n");
+                }
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 }

@@ -5,19 +5,21 @@ import java.util.HashMap;
 import java.util.Map;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.TreeMap;
 
-public abstract class Account implements Reportable {
-    protected String accountId;
-    protected Map<String, Security> holdings;
+public abstract class Account {
+    protected String accountId; //accounts can have matching IDs as I want this to be inputted by user,
+                                // since the user might want to use the actual ID of his account from the bank for example
+    protected TreeMap<String, Security> holdings;
 
     public Account(String accountId) {
         this.accountId = accountId;
-        this.holdings = new HashMap<>();
+        this.holdings = new TreeMap<>();
     }
 
     /**
-     *
-     * @param security
+     * adds a security to the account map
+     * @param security the security to add
      */
     public void addSecurity(Security security) {
         if (holdings.containsKey(security.getTicker())) {
@@ -38,7 +40,7 @@ public abstract class Account implements Reportable {
     public double getPortfolioMarketValue() {
         double totalValue = 0;
         for (Security security : holdings.values()) {
-            totalValue += security.getMarketValue() * security.getShareCount();
+            totalValue += security.getMarketValue();
         }
         return totalValue;
     }
@@ -56,18 +58,6 @@ public abstract class Account implements Reportable {
         return getPortfolioMarketValue() - originalValue;
     }
 
-
-
-    /**
-     * Writes a detailed report on the growth of the account (or loss)
-     * @param outputFilePath file to output the report to
-     * @throws IOException exception thrown
-     */
-    @Override
-    public void writeReport(String outputFilePath) throws IOException {
-        //todo
-    }
-
     public String getAccountId() {
         return accountId;
     }
@@ -80,7 +70,7 @@ public abstract class Account implements Reportable {
         return holdings;
     }
 
-    public void setHoldings(Map<String, Security> holdings) {
+    public void setHoldings(TreeMap<String, Security> holdings) {
         this.holdings = holdings;
     }
 

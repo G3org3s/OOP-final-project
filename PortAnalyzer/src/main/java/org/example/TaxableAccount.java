@@ -1,8 +1,8 @@
 package org.example;
 
 public class TaxableAccount extends Account implements TaxableIncomeCalculable {
-    public TaxableAccount(String accountId, String ownerId) {
-        super(accountId, ownerId);
+    public TaxableAccount(String accountId) {
+        super(accountId);
     }
 
     @Override
