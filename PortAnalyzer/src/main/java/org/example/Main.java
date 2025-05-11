@@ -20,7 +20,8 @@ public class Main {
         List<Account> accounts = new ArrayList<>();
         accounts.add(TaxableAccount);
         accounts.add(NonTaxableAccount);
-        System.out.println(TaxableAccount.getHoldings());
+        Comparator<Account> comparator = new Account.AccountComparator();
+        accounts.sort(comparator);
         writeReport("src/main/resources/Report", Collections.unmodifiableList(accounts));
     }
 
